@@ -1,0 +1,80 @@
+Create a clean, minimal, text-first website inspired by https://techessentials.in/
+
+Website name: Ctrl + G  
+Tagline: From Ctrl+V to Growth
+
+Design & Style:
+- Minimal, editorial blog-style layout
+- Lots of white space
+- Text-focused (ideas over visuals)
+- Use Inter font
+- Black / dark gray text on white background
+- Large readable headings
+- Calm, professional, publication-like feel
+- No flashy animations or gradients
+
+Pages & Sections:
+
+1. Home Page
+- Show website name "Ctrl + G"
+- Tagline below it: "From Ctrl+V to Growth"
+- Short intro paragraph:
+  "Practical writing on technology, Excel, AI, and automation — for people who want smarter work, not more work."
+- List of latest articles with:
+  - Article title
+  - Short description
+  - Date / read time
+
+2. Articles Page
+- Heading: "Articles"
+- Subtitle: "Writing on tech, Excel, AI & automation."
+- Clean vertical list of articles similar to TechEssentials
+- Clicking an article opens a full article page
+- Article page should be distraction-free (no sidebar)
+
+3. About Page
+- Dedicated About page (not just a section)
+- Heading: "About Ctrl + G"
+- Content tone should be calm and thoughtful
+- Include text similar to:
+  "Most people don’t need more tools. They need clarity.
+   Ctrl + G exists to help people move from copying workflows blindly
+   to growing intentionally — using technology that actually works
+   in real jobs."
+- Use bullet points for what readers will gain:
+  - Learn what to apply immediately
+  - Know what to ignore
+  - Think clearly in the age of AI
+
+4. Header / Navigation
+- Simple top navigation with links:
+  - Home
+  - Articles
+  - About
+- No heavy buttons, keep it minimal
+
+5. Footer
+- Minimal footer with:
+  - Newsletter signup section:
+    Heading: "Get new articles in your inbox."
+    Email input field
+    Subscribe button
+  - Footer text:
+    © 2026 Ctrl + G
+    From Ctrl+V to Growth
+  - Links:
+    - Privacy Policy
+    - Unsubscribe (or Manage subscription)
+
+6. Privacy Policy Page
+- Simple privacy policy page
+- States that emails are collected only for article notifications
+- No spam, unsubscribe anytime
+- Clean, readable text
+
+General Notes:
+- The site should feel like a thoughtful publication, not a marketing website
+- Prioritize readability and clarity
+- No popups
+- No ads
+- Calm, confident tone everywhere
