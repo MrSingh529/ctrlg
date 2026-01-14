@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { getDb } from "./db";
 import {
   articles,
   subscribers,
@@ -8,6 +8,8 @@ import {
   type Subscriber,
 } from "@shared/schema";
 import { eq } from "drizzle-orm";
+
+const db = getDb();
 
 export interface IStorage {
   getArticles(): Promise<Article[]>;
