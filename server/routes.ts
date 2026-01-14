@@ -41,9 +41,9 @@ async function addSubscriberToEmailOctopus(email: string) {
 }
 
 export async function registerRoutes(
-  httpServer: Server,
+  _httpServer: any,
   app: Express
-): Promise<Server> {
+) {
   // Articles
   app.get(api.articles.list.path, async (req, res) => {
     const articles = await storage.getArticles();
@@ -111,8 +111,6 @@ export async function registerRoutes(
   });
 
   await seedDatabase();
-
-  return httpServer;
 }
 
 async function seedDatabase() {

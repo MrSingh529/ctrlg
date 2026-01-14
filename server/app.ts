@@ -6,6 +6,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-registerRoutes(null as any, app);
+await registerRoutes(undefined as any, app);
 
 export default app;
