@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { z } from "zod";
 import { storage } from "./storage.js";
 import { api } from "@shared/routes";
-import { sendArticleEmailResend } from "./resend.js";
+import { sendArticleEmailSendGrid } from "./sendgrid.js";
 
 export async function registerRoutes(_httpServer: any, app: Express) {
 
@@ -27,27 +27,29 @@ export async function registerRoutes(_httpServer: any, app: Express) {
       const input = api.articles.create.input.parse(req.body);
       const article = await storage.createArticle(input);
 
-      // Send emails in background
+      // Send emails via SendGrid
       try {
         const subscribers = await storage.getSubscribers();
         
-        // Send emails via Resend
+        // Send emails but don't block article creation
         const emailPromises = subscribers.map(s => 
-          sendArticleEmailResend(s.email, {
+          sendArticleEmailSendGrid(s.email, {
             title: article.title,
             description: article.description,
             slug: article.slug,
           }).catch(err => {
             console.error(`Failed to send email to ${s.email}:`, err.message);
+            // Don't throw - continue with other emails
           })
         );
         
         Promise.all(emailPromises).then(() => {
-          console.log(`Resend emails sent to ${subscribers.length} subscribers`);
+          console.log(`SendGrid emails sent to ${subscribers.length} subscribers`);
         });
         
       } catch (emailError) {
-        console.error("Resend setup error:", emailError);
+        console.error("SendGrid setup error:", emailError);
+        // Don't fail article creation
       }
 
       res.status(201).json(article);
