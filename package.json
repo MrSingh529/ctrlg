@@ -4,12 +4,11 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "build": "npm run build:client && npm run build:server",
+    "build": "npm run build:client && npm run build:api",
     "build:client": "vite build",
-    "build:server": "tsc server/*.ts --outDir dist-server --module es2020 --target es2020 --moduleResolution node",
+    "build:api": "tsc --project tsconfig.json",
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
-    "dev:client": "vite --port 3000",
-    "start": "node dist-server/index.js"
+    "dev:client": "vite --port 3000"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
