@@ -2,10 +2,10 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
-export default defineConfig(async () => ({
-  plugins: [react()],
-
+export default defineConfig({
   root: "client",
+
+  plugins: [react()],
 
   build: {
     outDir: "../dist",
@@ -18,4 +18,4 @@ export default defineConfig(async () => ({
       "@shared": path.resolve(__dirname, "shared"),
     },
   },
-}));
+});
