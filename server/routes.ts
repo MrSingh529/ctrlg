@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { z } from "zod";
 import { storage } from "./storage.js";
 import { api } from "@shared/routes";
-import { sendArticleEmailSendGrid } from "./sendgrid.js";
+import { sendArticleEmailMailjet } from "./mailjet.js";
 
 export async function registerRoutes(_httpServer: any, app: Express) {
 
@@ -27,13 +27,13 @@ export async function registerRoutes(_httpServer: any, app: Express) {
       const input = api.articles.create.input.parse(req.body);
       const article = await storage.createArticle(input);
 
-      // Send emails via SendGrid
+      // Send emails via Mailjet
       try {
         const subscribers = await storage.getSubscribers();
         
         // Send emails but don't block article creation
         const emailPromises = subscribers.map(s => 
-          sendArticleEmailSendGrid(s.email, {
+          sendArticleEmailMailjet(s.email, {
             title: article.title,
             description: article.description,
             slug: article.slug,
@@ -44,11 +44,11 @@ export async function registerRoutes(_httpServer: any, app: Express) {
         );
         
         Promise.all(emailPromises).then(() => {
-          console.log(`SendGrid emails sent to ${subscribers.length} subscribers`);
+          console.log(`Mailjet emails sent to ${subscribers.length} subscribers`);
         });
         
       } catch (emailError) {
-        console.error("SendGrid setup error:", emailError);
+        console.error("Mailjet setup error:", emailError);
         // Don't fail article creation
       }
 
