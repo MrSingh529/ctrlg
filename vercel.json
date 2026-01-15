@@ -2,10 +2,6 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.ts",
-      "use": "@vercel/node"
-    },
-    {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
@@ -15,10 +11,6 @@
   ],
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "/api/index.ts"
-    },
-    {
       "source": "/assets/:path*",
       "destination": "/assets/:path*"
     },
@@ -27,8 +19,11 @@
       "destination": "/favicon.png"
     },
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "env": {
+    "VITE_API_URL": "https://ctrlg-backend.onrender.com"
+  }
 }

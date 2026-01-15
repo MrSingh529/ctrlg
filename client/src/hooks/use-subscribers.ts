@@ -1,13 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@shared/routes";
 import { z } from "zod";
+import { apiUrl } from "@/lib/api";
 
 type SubscriberInput = z.infer<typeof api.subscribers.create.input>;
 
 export function useCreateSubscriber() {
   return useMutation({
     mutationFn: async (data: SubscriberInput) => {
-      const res = await fetch(api.subscribers.create.path, {
+      const res = await fetch(apiUrl(api.subscribers.create.path), {
         method: api.subscribers.create.method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

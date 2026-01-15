@@ -4,7 +4,7 @@ import path from "path";
 
 export default defineConfig({
   root: "client",
-  base: "/",  // This is correct
+  base: "/",
   
   plugins: [react()],
   
@@ -18,5 +18,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "client/src"),
       "@shared": path.resolve(__dirname, "shared"),
     },
+  },
+  
+  server: {
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      }
+    }
   }
 });

@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: ctrlg-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: EMAILOCTOPUS_API_KEY
+        sync: false
+      - key: EMAILOCTOPUS_LIST_ID
+        sync: false
+      - key: GMAIL_CLIENT_ID
+        sync: false
+      - key: GMAIL_CLIENT_SECRET
+        sync: false
+      - key: GMAIL_REFRESH_TOKEN
+        sync: false
+      - key: GMAIL_FROM_EMAIL
+        sync: false
