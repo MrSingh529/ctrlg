@@ -40,7 +40,10 @@ export default function Admin() {
     try {
       const response = await fetch(apiUrl("/api/articles"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
         body: JSON.stringify({
           title,
           slug,
