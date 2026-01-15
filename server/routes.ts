@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { z } from "zod";
 import { storage } from "./storage.js";
 import { api } from "@shared/routes";
-import { sendArticleEmail } from "./gmail.js";
+import { sendNewArticleEmail } from "./emailoctopus.js";
 
 export async function registerRoutes(_httpServer: any, app: Express) {
 
@@ -27,31 +27,17 @@ export async function registerRoutes(_httpServer: any, app: Express) {
       const input = api.articles.create.input.parse(req.body);
       const article = await storage.createArticle(input);
 
-      // Send emails in background - don't wait for it
+      // Send email notification via EmailOctopus
       try {
-        const subscribers = await storage.getSubscribers();
-        // Use Promise.all for parallel sending
-        const emailPromises = subscribers.map(s => 
-          sendArticleEmail(s.email, {
-            title: article.title,
-            description: article.description,
-            slug: article.slug,
-          }).catch(err => {
-            console.error(`Failed to send email to ${s.email}:`, err);
-            // Don't throw - just log the error
-          })
-        );
-        
-        // Don't await - let it run in background
-        Promise.all(emailPromises).then(() => {
-          console.log(`Sent ${emailPromises.length} email notifications`);
-        }).catch(err => {
-          console.error("Email sending failed:", err);
+        await sendNewArticleEmail({
+          title: article.title,
+          description: article.description,
+          slug: article.slug,
         });
-        
+        console.log("EmailOctopus campaign created successfully");
       } catch (emailError) {
-        console.error("Email sending setup failed:", emailError);
-        // Don't fail the article creation because of email
+        console.error("EmailOctopus error:", emailError);
+        // Don't fail article creation if email fails
       }
 
       res.status(201).json(article);

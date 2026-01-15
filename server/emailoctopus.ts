@@ -6,24 +6,23 @@ export async function sendNewArticleEmail(article: {
   description: string;
   slug: string;
 }) {
-  console.log("📧 Creating EmailOctopus campaign:", article.title);
+  console.log("Creating EmailOctopus campaign:", article.title);
 
   const body = new URLSearchParams({
     subject: `New article: ${article.title}`,
     from_name: "Ctrl + G",
-    from_email: "harpindersingh529@gmail.com", // must be verified
+    from_email: "harpindersingh529@gmail.com",
     "list_ids[]": EMAILOCTOPUS_LIST_ID,
     "content[html]": `
       <p>${article.description}</p>
       <p>
-        <a href="https://ctrlg.in/articles/${article.slug}">
+        <a href="https://ctrlgtech.vercel.app/articles/${article.slug}">
           Read here →
         </a>
       </p>
     `,
   });
 
-  // ✅ CORRECT API DOMAIN
   const createRes = await fetch(
     `https://api.emailoctopus.com/1.6/campaigns?api_key=${EMAILOCTOPUS_API_KEY}`,
     {
@@ -38,12 +37,12 @@ export async function sendNewArticleEmail(article: {
   const createText = await createRes.text();
 
   if (!createRes.ok) {
-    console.error("❌ EmailOctopus create failed:", createText);
+    console.error("EmailOctopus create failed:", createText);
     throw new Error("Failed to create campaign");
   }
 
   const campaign = JSON.parse(createText);
-  console.log("✅ Campaign created:", campaign.id);
+  console.log("Campaign created:", campaign.id);
 
   // SEND
   const sendRes = await fetch(
@@ -53,9 +52,9 @@ export async function sendNewArticleEmail(article: {
 
   if (!sendRes.ok) {
     const errText = await sendRes.text();
-    console.error("❌ EmailOctopus send failed:", errText);
+    console.error("EmailOctopus send failed:", errText);
     throw new Error("Failed to send campaign");
   }
 
-  console.log("🚀 Campaign sent successfully");
+  console.log("Campaign sent successfully");
 }
