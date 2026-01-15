@@ -4,7 +4,7 @@ import path from "path";
 
 export default defineConfig({
   root: "client",
-  base: "/",
+  base: "/",  // This is correct
   
   plugins: [react()],
   
@@ -18,9 +18,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "client/src"),
       "@shared": path.resolve(__dirname, "shared"),
     },
-  },
-  
-  server: {
-    port: 3000
   }
 });
