@@ -1,13 +1,13 @@
 import { getDb } from "./db.js";
 import { articles, subscribers } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
 const db = getDb();
 
 export class DatabaseStorage {
 
   async getArticles() {
-    return db.select().from(articles).orderBy(articles.publishedAt);
+    return db.select().from(articles).orderBy(desc(articles.publishedAt));
   }
 
   async getArticleBySlug(slug: string) {

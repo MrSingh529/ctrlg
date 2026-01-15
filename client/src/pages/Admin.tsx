@@ -36,9 +36,8 @@ export default function Admin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+  
     try {
-      // FIX: Use apiUrl instead of hardcoded path
       const response = await fetch(apiUrl("/api/articles"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -49,25 +48,27 @@ export default function Admin() {
           content,
         }),
       });
-
+  
+      const data = await response.json(); // Parse response
+      
       if (!response.ok) {
-        throw new Error("Failed to create article");
+        throw new Error(data.message || "Failed to create article");
       }
-
+  
       toast({
         title: "Success!",
         description: "Article published successfully.",
       });
-
+  
       // Reset form
       setTitle("");
       setSlug("");
       setDescription("");
       setContent("");
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to publish article. Please try again.",
+        description: error.message || "Failed to publish article. Please try again.",
         variant: "destructive",
       });
     } finally {
