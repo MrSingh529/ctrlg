@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { z } from "zod";
 import { storage } from "./storage.js";
 import { api } from "@shared/routes";
+import { addSubscriberToEmailOctopus } from "./emailoctopus-subscribe.js";
 import { sendArticleEmailMailjet } from "./mailjet.js";
 
 export async function registerRoutes(_httpServer: any, app: Express) {
@@ -66,28 +67,51 @@ export async function registerRoutes(_httpServer: any, app: Express) {
   });
 
   // CREATE SUBSCRIBER
-  app.post(api.subscribers.create.path, async (req, res) => {
-    try {
-      const input = api.subscribers.create.input.parse(req.body);
-      const existing = await storage.getSubscriberByEmail(input.email);
+app.post(api.subscribers.create.path, async (req, res) => {
+  try {
+    const input = api.subscribers.create.input.parse(req.body);
+    const existing = await storage.getSubscriberByEmail(input.email);
 
-      if (existing) {
-        return res.status(409).json({ message: "Already subscribed" });
-      }
-
-      const subscriber = await storage.createSubscriber(input);
-      res.status(201).json(subscriber);
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(400).json({
-          message: err.errors[0].message,
-          field: err.errors[0].path.join("."),
-        });
-      }
-      console.error("Subscriber creation error:", err);
-      res.status(500).json({ message: "Internal server error" });
+    if (existing) {
+      return res.status(409).json({ message: "Already subscribed" });
     }
-  });
+
+    // 1. Save to your database
+    const subscriber = await storage.createSubscriber(input);
+    
+    // 2. Add to EmailOctopus (for welcome email and list management)
+    try {
+      await addSubscriberToEmailOctopus(input.email);
+    } catch (emailOctopusError) {
+      console.error("Failed to add to EmailOctopus:", emailOctopusError);
+      // Don't fail - still save to database
+    }
+    
+    // 3. Send welcome email via Mailjet (optional backup)
+    try {
+      await sendArticleEmailMailjet(input.email, {
+        title: "Welcome to Ctrl + G!",
+        description: "You'll receive practical insights on technology, Excel, AI, and automation.",
+        slug: "welcome",
+      });
+      console.log(`Welcome email sent to ${input.email}`);
+    } catch (mailjetError) {
+      console.error("Welcome email failed:", mailjetError);
+      // Don't fail subscription
+    }
+
+    res.status(201).json(subscriber);
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status.status(400).json({
+        message: err.errors[0].message,
+        field: err.errors[0].path.join("."),
+      });
+    }
+    console.error("Subscriber creation error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
   await seedDatabase();
 }
