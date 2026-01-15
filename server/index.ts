@@ -1,32 +1,38 @@
 import "dotenv/config";
 import express from "express";
-import cors from "cors";
 import { registerRoutes } from "./routes";
 
 const app = express();
 
-// cors package with proper configuration
-const corsOptions = {
-  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
-    const allowedOrigins = [
-      "https://ctrlgtech.vercel.app",
-      "http://localhost:3000"
-    ];
-    
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-};
-
-app.use(cors(corsOptions));
+// CORS middleware - FIXED
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    "https://ctrlgtech.vercel.app",
+    "http://localhost:3000"
+  ];
+  
+  const origin = req.headers.origin;
+  
+  // Set CORS headers for ALL responses
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  
+  // Handle preflight
+  if (req.method === "OPTIONS") {
+    // Send proper headers for OPTIONS
+    return res.status(204).header({
+      "Content-Length": "0",
+      "Access-Control-Max-Age": "86400"
+    }).end();
+  }
+  
+  next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

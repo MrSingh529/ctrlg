@@ -27,13 +27,31 @@ export async function registerRoutes(_httpServer: any, app: Express) {
       const input = api.articles.create.input.parse(req.body);
       const article = await storage.createArticle(input);
 
-      const subscribers = await storage.getSubscribers();
-      for (const s of subscribers) {
-        await sendArticleEmail(s.email, {
-          title: article.title,
-          description: article.description,
-          slug: article.slug,
+      // Send emails in background - don't wait for it
+      try {
+        const subscribers = await storage.getSubscribers();
+        // Use Promise.all for parallel sending
+        const emailPromises = subscribers.map(s => 
+          sendArticleEmail(s.email, {
+            title: article.title,
+            description: article.description,
+            slug: article.slug,
+          }).catch(err => {
+            console.error(`Failed to send email to ${s.email}:`, err);
+            // Don't throw - just log the error
+          })
+        );
+        
+        // Don't await - let it run in background
+        Promise.all(emailPromises).then(() => {
+          console.log(`Sent ${emailPromises.length} email notifications`);
+        }).catch(err => {
+          console.error("Email sending failed:", err);
         });
+        
+      } catch (emailError) {
+        console.error("Email sending setup failed:", emailError);
+        // Don't fail the article creation because of email
       }
 
       res.status(201).json(article);
@@ -44,7 +62,8 @@ export async function registerRoutes(_httpServer: any, app: Express) {
           field: err.errors[0].path.join("."),
         });
       }
-      throw err;
+      console.error("Article creation error:", err);
+      res.status(500).json({ message: "Internal server error" });
     }
   });
 
@@ -67,11 +86,11 @@ export async function registerRoutes(_httpServer: any, app: Express) {
           field: err.errors[0].path.join("."),
         });
       }
-      throw err;
+      console.error("Subscriber creation error:", err);
+      res.status(500).json({ message: "Internal server error" });
     }
   });
 
-  // 🔥 SEED ONLY IF EMPTY
   await seedDatabase();
 }
 
