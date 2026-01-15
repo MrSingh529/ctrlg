@@ -10,8 +10,6 @@ import { RichTextEditor } from "@/components/RichTextEditor";
 import { AdminGuard } from "@/components/AdminGuard";
 
 export default function Admin() {
-    return (
-      <AdminGuard>
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
@@ -76,63 +74,65 @@ export default function Admin() {
   };
 
   return (
-    <Layout>
-      <div className="max-w-4xl mx-auto py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Publish New Article</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  value={title}
-                  onChange={handleTitleChange}
-                  placeholder="Enter article title"
-                  required
-                />
-              </div>
+    <AdminGuard>
+      <Layout>
+        <div className="max-w-4xl mx-auto py-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Publish New Article</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Title</Label>
+                  <Input
+                    id="title"
+                    value={title}
+                    onChange={handleTitleChange}
+                    placeholder="Enter article title"
+                    required
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="slug">Slug (URL)</Label>
-                <Input
-                  id="slug"
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
-                  placeholder="article-url-slug"
-                  required
-                />
-                <p className="text-sm text-muted-foreground">
-                  This will be used in the URL: ctrlgtech.vercel.app/articles/{slug || "article-url"}
-                </p>
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="slug">Slug (URL)</Label>
+                  <Input
+                    id="slug"
+                    value={slug}
+                    onChange={(e) => setSlug(e.target.value)}
+                    placeholder="article-url-slug"
+                    required
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    This will be used in the URL: ctrlgtech.vercel.app/articles/{slug || "article-url"}
+                  </p>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Brief description of the article"
-                  rows={3}
-                  required
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Brief description of the article"
+                    rows={3}
+                    required
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label>Content</Label>
-                <RichTextEditor content={content} onChange={setContent} />
-              </div>
+                <div className="space-y-2">
+                  <Label>Content</Label>
+                  <RichTextEditor content={content} onChange={setContent} />
+                </div>
 
-              <Button type="submit" disabled={isSubmitting} className="w-full">
-                {isSubmitting ? "Publishing..." : "Publish Article"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </Layout>
+                <Button type="submit" disabled={isSubmitting} className="w-full">
+                  {isSubmitting ? "Publishing..." : "Publish Article"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </Layout>
+    </AdminGuard>
   );
 }
