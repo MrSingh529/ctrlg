@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { AdminGuard } from "@/components/AdminGuard";
+import { apiUrl } from "@/lib/api";
 
 export default function Admin() {
   const [title, setTitle] = useState("");
@@ -37,7 +38,8 @@ export default function Admin() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/articles", {
+      // FIX: Use apiUrl instead of hardcoded path
+      const response = await fetch(apiUrl("/api/articles"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
