@@ -4,11 +4,12 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "build": "vite build",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build",
+    "build:server": "tsc server/*.ts --outDir dist-server --module es2020 --target es2020 --moduleResolution node",
+    "dev": "cross-env NODE_ENV=development tsx server/index.ts",
     "dev:client": "vite --port 3000",
-    "dev:server": "cross-env NODE_ENV=development tsx server/index.ts",
-    "start": "node api/index.ts"
+    "start": "node dist-server/index.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
