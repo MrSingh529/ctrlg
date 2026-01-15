@@ -1,64 +1,37 @@
-import { getDb } from "./db";
-import {
-  articles,
-  subscribers,
-  type InsertArticle,
-  type InsertSubscriber,
-  type Article,
-  type Subscriber,
-} from "@shared/schema";
+import { getDb } from "./db.js";
+import { articles, subscribers } from "@shared/schema";
 import { eq } from "drizzle-orm";
 
 const db = getDb();
 
-export interface IStorage {
-  getArticles(): Promise<Article[]>;
-  getArticleBySlug(slug: string): Promise<Article | undefined>;
-  createArticle(article: InsertArticle): Promise<Article>;
-  createSubscriber(subscriber: InsertSubscriber): Promise<Subscriber>;
-  getSubscriberByEmail(email: string): Promise<Subscriber | undefined>;
-  getSubscribers(): Promise<Subscriber[]>;
-}
+export class DatabaseStorage {
 
-export class DatabaseStorage implements IStorage {
-  async getArticles(): Promise<Article[]> {
-    return await db.select().from(articles).orderBy(articles.publishedAt);
+  async getArticles() {
+    return db.select().from(articles).orderBy(articles.publishedAt);
   }
 
-  async getArticleBySlug(slug: string): Promise<Article | undefined> {
-    const [article] = await db
-      .select()
-      .from(articles)
-      .where(eq(articles.slug, slug));
-    return article;
+  async getArticleBySlug(slug: string) {
+    const [row] = await db.select().from(articles).where(eq(articles.slug, slug));
+    return row;
   }
 
-  async createArticle(insertArticle: InsertArticle): Promise<Article> {
-    const [article] = await db
-      .insert(articles)
-      .values(insertArticle)
-      .returning();
-    return article;
+  async createArticle(data: any) {
+    const [row] = await db.insert(articles).values(data).returning();
+    return row;
   }
 
-  async createSubscriber(insertSubscriber: InsertSubscriber): Promise<Subscriber> {
-    const [subscriber] = await db
-      .insert(subscribers)
-      .values(insertSubscriber)
-      .returning();
-    return subscriber;
+  async getSubscribers() {
+    return db.select().from(subscribers);
   }
 
-  async getSubscriberByEmail(email: string): Promise<Subscriber | undefined> {
-    const [subscriber] = await db
-      .select()
-      .from(subscribers)
-      .where(eq(subscribers.email, email));
-    return subscriber;
+  async createSubscriber(data: any) {
+    const [row] = await db.insert(subscribers).values(data).returning();
+    return row;
   }
 
-  async getSubscribers(): Promise<Subscriber[]> {
-    return await db.select().from(subscribers);
+  async getSubscriberByEmail(email: string) {
+    const [row] = await db.select().from(subscribers).where(eq(subscribers.email, email));
+    return row;
   }
 }
 

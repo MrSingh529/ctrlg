@@ -8,13 +8,13 @@ let pool: pg.Pool | null = null;
 
 export function getDb() {
   if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL is not set");
+    throw new Error("DATABASE_URL missing");
   }
 
   if (!pool) {
     pool = new Pool({
       connectionString: process.env.DATABASE_URL,
-      ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+      ssl: { rejectUnauthorized: false },
     });
   }
 

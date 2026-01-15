@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
   "build": "vite build",
-  "dev": "vite",
+  "dev": "tsx server/index.ts",
+  "dev:client": "vite --port 3000",
   "start": "node api/index.ts"
 },
   "dependencies": {
