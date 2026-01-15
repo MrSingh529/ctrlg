@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { z } from "zod";
 import { storage } from "./storage.js";
 import { api } from "@shared/routes";
-import { sendArticleEmail } from "./gmail.js";
+import { sendArticleEmailResend } from "./resend.js";
 
 export async function registerRoutes(_httpServer: any, app: Express) {
 
@@ -31,25 +31,23 @@ export async function registerRoutes(_httpServer: any, app: Express) {
       try {
         const subscribers = await storage.getSubscribers();
         
-        // Send emails but don't block article creation
-        Promise.all(
-          subscribers.map(s => 
-            sendArticleEmail(s.email, {
-              title: article.title,
-              description: article.description,
-              slug: article.slug,
-            }).catch(err => {
-              console.error(`Failed to send email to ${s.email}:`, err.message);
-              // Don't throw - continue with other emails
-            })
-          )
-        ).then(() => {
-          console.log(`Email sending completed for ${subscribers.length} subscribers`);
+        // Send emails via Resend
+        const emailPromises = subscribers.map(s => 
+          sendArticleEmailResend(s.email, {
+            title: article.title,
+            description: article.description,
+            slug: article.slug,
+          }).catch(err => {
+            console.error(`Failed to send email to ${s.email}:`, err.message);
+          })
+        );
+        
+        Promise.all(emailPromises).then(() => {
+          console.log(`Resend emails sent to ${subscribers.length} subscribers`);
         });
         
       } catch (emailError) {
-        console.error("Email setup error:", emailError);
-        // Don't fail article creation
+        console.error("Resend setup error:", emailError);
       }
 
       res.status(201).json(article);
