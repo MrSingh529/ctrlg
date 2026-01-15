@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { z } from "zod";
 import { storage } from "./storage.js";
 import { api } from "@shared/routes";
-import { sendNewArticleEmail } from "./emailoctopus.js";
+import { sendArticleEmail } from "./gmail.js";
 
 export async function registerRoutes(_httpServer: any, app: Express) {
 
@@ -27,17 +27,29 @@ export async function registerRoutes(_httpServer: any, app: Express) {
       const input = api.articles.create.input.parse(req.body);
       const article = await storage.createArticle(input);
 
-      // Send email notification via EmailOctopus
+      // Send emails in background
       try {
-        await sendNewArticleEmail({
-          title: article.title,
-          description: article.description,
-          slug: article.slug,
+        const subscribers = await storage.getSubscribers();
+        
+        // Send emails but don't block article creation
+        Promise.all(
+          subscribers.map(s => 
+            sendArticleEmail(s.email, {
+              title: article.title,
+              description: article.description,
+              slug: article.slug,
+            }).catch(err => {
+              console.error(`Failed to send email to ${s.email}:`, err.message);
+              // Don't throw - continue with other emails
+            })
+          )
+        ).then(() => {
+          console.log(`Email sending completed for ${subscribers.length} subscribers`);
         });
-        console.log("EmailOctopus campaign created successfully");
+        
       } catch (emailError) {
-        console.error("EmailOctopus error:", emailError);
-        // Don't fail article creation if email fails
+        console.error("Email setup error:", emailError);
+        // Don't fail article creation
       }
 
       res.status(201).json(article);

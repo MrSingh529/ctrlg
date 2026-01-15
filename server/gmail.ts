@@ -1,23 +1,4 @@
 import nodemailer from "nodemailer";
-import { google } from "googleapis";
-
-const {
-  GMAIL_CLIENT_ID,
-  GMAIL_CLIENT_SECRET,
-  GMAIL_REFRESH_TOKEN,
-} = process.env;
-
-const OAuth2 = google.auth.OAuth2;
-
-const oauth2Client = new OAuth2(
-  GMAIL_CLIENT_ID,
-  GMAIL_CLIENT_SECRET,
-  "https://developers.google.com/oauthplayground"
-);
-
-oauth2Client.setCredentials({
-  refresh_token: GMAIL_REFRESH_TOKEN,
-});
 
 export async function sendArticleEmail(
   to: string,
@@ -27,21 +8,18 @@ export async function sendArticleEmail(
     slug: string;
   }
 ) {
-  const accessToken = await oauth2Client.getAccessToken();
-
+  // Create transporter with App Password
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
     auth: {
-      type: "OAuth2",
-      user: "harpindersingh529@gmail.com",
-      clientId: GMAIL_CLIENT_ID,
-      clientSecret: GMAIL_CLIENT_SECRET,
-      refreshToken: GMAIL_REFRESH_TOKEN,
-      accessToken: accessToken.token!,
+      user: process.env.GMAIL_USER || "harpindersingh529@gmail.com",
+      pass: process.env.GMAIL_APP_PASSWORD,
     },
   });
 
-  const articleUrl = `https://ctrlg.in/articles/${article.slug}`;
+  const articleUrl = `https://ctrlgtech.vercel.app/articles/${article.slug}`;
 
   const html = `
     <div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
@@ -94,10 +72,16 @@ export async function sendArticleEmail(
     </div>
   `;
 
-  await transporter.sendMail({
-    from: `"Ctrl + G" <harpindersingh529@gmail.com>`,
-    to,
-    subject: `New article: ${article.title}`,
-    html,
-  });
+  try {
+    await transporter.sendMail({
+      from: `"Ctrl + G" <${process.env.GMAIL_USER || "harpindersingh529@gmail.com"}>`,
+      to,
+      subject: `New article: ${article.title}`,
+      html,
+    });
+    console.log(`Email sent to ${to}`);
+  } catch (error) {
+    console.error(`Failed to send email to ${to}:`, error);
+    throw error;
+  }
 }
