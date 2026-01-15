@@ -5,8 +5,8 @@ import { registerRoutes } from "./routes";
 
 const app = express();
 
-// CORS middleware
-app.use(cors({
+// CORS configuration
+const corsOptions = {
   origin: [
     "https://ctrlgtech.vercel.app",
     "http://localhost:3000"
@@ -14,10 +14,12 @@ app.use(cors({
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
-}));
+};
 
-// Handle preflight requests
-app.options("*", cors());
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
