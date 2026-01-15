@@ -1,25 +1,31 @@
 import "dotenv/config";
 import express from "express";
-import cors from "cors";
 import { registerRoutes } from "./routes";
 
 const app = express();
 
-// CORS configuration
-const corsOptions = {
-  origin: [
+// Manual CORS middleware
+app.use((req, res, next) => {
+  const allowedOrigins = [
     "https://ctrlgtech.vercel.app",
     "http://localhost:3000"
-  ],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-};
-
-// Apply CORS middleware
-app.use(cors(corsOptions));
-
-app.options("*", cors(corsOptions));
+  ];
+  
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin as string)) {
+    res.setHeader("Access-Control-Allow-Origin", origin as string);
+  }
+  
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+  
+  next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
