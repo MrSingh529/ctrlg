@@ -2,7 +2,6 @@ import { useArticle } from "@/hooks/use-articles";
 import { Layout } from "@/components/Layout";
 import { useParams, Link } from "wouter";
 import { format } from "date-fns";
-import ReactMarkdown from "react-markdown";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -75,8 +74,11 @@ export default function ArticleDetail() {
         </header>
 
         <div className="prose-custom prose-lg mx-auto">
-          <ReactMarkdown>{article.content}</ReactMarkdown>
-        </div>
+        <div 
+          className="article-content"
+          dangerouslySetInnerHTML={{ __html: article.content }} 
+        />
+      </div>
 
         <div className="mt-16 pt-8 border-t border-border flex justify-between items-center">
           <Link href="/articles" className="text-sm font-semibold hover:underline">
