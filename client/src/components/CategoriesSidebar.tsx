@@ -74,7 +74,7 @@ export function CategoriesSidebar() {
         </div>
       </div>
       
-        {/* ABOUT Section */}
+      {/* ABOUT Section */}
       <div className="pt-6 border-t">
         <h4 className="font-semibold text-sm mb-3 text-muted-foreground">ABOUT</h4>
         <div className="space-y-3">
@@ -89,5 +89,6 @@ export function CategoriesSidebar() {
           </p>
         </div>
       </div>
+    </div>
   );
 }
