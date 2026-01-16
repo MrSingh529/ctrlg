@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Article } from "@shared/schema";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
+import { Tag } from "lucide-react";
 
 interface ArticleCardProps {
   article: Article;
@@ -19,16 +20,39 @@ export function ArticleCard({ article, index = 0 }: ArticleCardProps) {
       <Link href={`/articles/${article.slug}`}>
         <div className="py-8 border-b border-border/40 cursor-pointer group-last:border-0 hover:bg-slate-50/50 -mx-6 px-6 rounded-xl transition-colors duration-200">
           <div className="flex flex-col gap-2 mb-2">
-            <span className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
-              {article.publishedAt ? format(new Date(article.publishedAt), "MMMM d, yyyy") : "Draft"}
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
+                {article.publishedAt ? format(new Date(article.publishedAt), "MMMM d, yyyy") : "Draft"}
+              </span>
+              {article.author && (
+                <span className="text-xs font-medium text-muted-foreground">
+                  {article.author}
+                </span>
+              )}
+            </div>
             <h3 className="text-2xl font-bold tracking-tight text-foreground group-hover:text-primary/80 transition-colors">
               {article.title}
             </h3>
           </div>
-          <p className="text-muted-foreground leading-relaxed max-w-2xl line-clamp-2">
+          <p className="text-muted-foreground leading-relaxed max-w-2xl line-clamp-2 mb-4">
             {article.description}
           </p>
+          
+          {/* Categories */}
+          {article.categories && article.categories.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {article.categories.map((category) => (
+                <span
+                  key={category.id}
+                  className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-full"
+                >
+                  <Tag className="w-3 h-3" />
+                  {category.name}
+                </span>
+              ))}
+            </div>
+          )}
+          
           <div className="mt-4 flex items-center text-sm font-medium text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
             Read article &rarr;
           </div>

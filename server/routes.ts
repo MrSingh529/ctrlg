@@ -40,7 +40,6 @@ export async function registerRoutes(_httpServer: any, app: Express) {
             slug: article.slug,
           }).catch(err => {
             console.error(`Failed to send email to ${s.email}:`, err.message);
-            // Don't throw - continue with other emails
           })
         );
         
@@ -50,7 +49,6 @@ export async function registerRoutes(_httpServer: any, app: Express) {
         
       } catch (emailError) {
         console.error("Mailjet setup error:", emailError);
-        // Don't fail article creation
       }
 
       res.status(201).json(article);
@@ -62,6 +60,39 @@ export async function registerRoutes(_httpServer: any, app: Express) {
         });
       }
       console.error("Article creation error:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/categories", async (_req, res) => {
+    try {
+      const categories = await storage.getCategories();
+      res.json(categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  app.get("/api/categories/:slug", async (req, res) => {
+    try {
+      const category = await storage.getCategoryBySlug(req.params.slug);
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      res.json(category);
+    } catch (error) {
+      console.error("Error fetching category:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  app.get("/api/categories/:slug/articles", async (req, res) => {
+    try {
+      const articles = await storage.getArticlesByCategory(req.params.slug);
+      res.json(articles);
+    } catch (error) {
+      console.error("Error fetching category articles:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
@@ -97,7 +128,6 @@ app.post(api.subscribers.create.path, async (req, res) => {
       console.log(`Welcome email sent to ${input.email}`);
     } catch (mailjetError) {
       console.error("Welcome email failed:", mailjetError);
-      // Don't fail subscription
     }
 
     res.status(201).json(subscriber);
@@ -116,7 +146,7 @@ app.post(api.subscribers.create.path, async (req, res) => {
   await seedDatabase();
 }
 
-/* ---------------- SEED ---------------- */
+/* SEED */
 
 async function seedDatabase() {
   const existing = await storage.getArticles();

@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { NewsletterForm } from "./NewsletterForm";
+import { CategoriesSidebar } from "./CategoriesSidebar";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -14,7 +15,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground font-sans">
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
-        <div className="container max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="container max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="text-xl font-bold tracking-tighter hover:opacity-80 transition-opacity">
             Ctrl + G
           </Link>
@@ -36,12 +37,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1 container max-w-4xl mx-auto px-6 py-12 md:py-20">
-        {children}
+      <main className="flex-1 container max-w-6xl mx-auto px-6 py-12 md:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+          {/* Main content - 3 columns */}
+          <div className="lg:col-span-3">
+            {children}
+          </div>
+          
+          {/* Sidebar - 1 column */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24">
+              <CategoriesSidebar />
+            </div>
+          </div>
+        </div>
       </main>
 
       <footer className="border-t border-border/40 py-12 bg-secondary/30">
-        <div className="container max-w-4xl mx-auto px-6 grid gap-12 md:grid-cols-2">
+        <div className="container max-w-6xl mx-auto px-6 grid gap-12 md:grid-cols-2">
           <div className="space-y-4">
             <h4 className="font-semibold text-lg tracking-tight">Stay updated</h4>
             <p className="text-muted-foreground text-sm max-w-xs leading-relaxed">
@@ -51,14 +64,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
           
           <div className="flex flex-col md:items-end justify-between gap-6">
-             <div className="text-sm text-muted-foreground space-y-1 md:text-right">
+            <div className="text-sm text-muted-foreground space-y-1 md:text-right">
               <p>© 2026 Ctrl + G</p>
               <p>From Ctrl+V to Growth</p>
             </div>
             <div className="flex gap-6 text-sm font-medium">
-               <Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
-                 Privacy Policy
-               </Link>
+              <Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
+                Privacy Policy
+              </Link>
             </div>
           </div>
         </div>
