@@ -55,85 +55,101 @@ export default function ArticleDetail() {
 
   return (
     <Layout>
-      <footer className="mt-8 max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* MAIN ARTICLE */}
-          <div className="lg:col-span-2">
-            <article>
-              <header className="mb-12 text-center">
-                <div className="flex items-center justify-center gap-2 mb-8">
-                  <Link
-                    href="/articles"
-                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
-                  >
-                    <ArrowLeft className="w-4 h-4" /> Back to articles
-                  </Link>
-                </div>
-
-                <time className="block text-sm font-medium text-muted-foreground mb-4 uppercase tracking-widest">
-                  {article.publishedAt
-                    ? format(new Date(article.publishedAt), "MMMM d, yyyy")
-                    : "Draft"}
-                </time>
-
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-[1.15] text-pretty">
-                  {article.title}
-                </h1>
-
-                <p className="text-xl text-muted-foreground leading-relaxed text-pretty">
-                  {article.description}
-                </p>
-              </header>
-
-              <div className="prose-custom prose-lg mx-auto">
-                <div
-                  className="article-content"
-                  dangerouslySetInnerHTML={{ __html: article.content }}
-                />
-              </div>
-
-              <div className="mt-16 pt-8 border-t border-border flex justify-between items-center">
-                <Link href="/articles" className="text-sm font-semibold hover:underline">
-                  ← More articles
-                </Link>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleShare}
-                  className="gap-2"
-                >
-                  <Share2 className="w-4 h-4" /> Share
-                </Button>
-              </div>
-            </article>
-          </div>
-
-          {/* SIDEBAR */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24">
-              {article && (
-                <RelatedArticles
-                  currentArticleId={article.id}
-                  excludeSlug={article.slug}
-                />
-              )}
-
-              {/* Newsletter signup */}
-              <div className="mt-12 p-6 bg-secondary/30 rounded-xl">
-                <h4 className="font-semibold text-lg mb-3">Stay Updated</h4>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Get notified when new articles are published.
-                </p>
-                <Link href="/">
-                  <Button variant="outline" className="w-full">
-                    Subscribe to Newsletter
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
+      <div className="max-w-4xl mx-auto px-4">
+        {/* BACK NAVIGATION */}
+        <div className="mb-8">
+          <Link
+            href="/articles"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back to articles
+          </Link>
         </div>
-      </footer>
+
+        {/* ARTICLE HEADER */}
+        <article>
+          <header className="mb-12 text-center">
+            <time className="block text-sm font-medium text-muted-foreground mb-4 uppercase tracking-widest">
+              {article.publishedAt
+                ? format(new Date(article.publishedAt), "MMMM d, yyyy")
+                : "Draft"}
+            </time>
+
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-[1.15] text-pretty">
+              {article.title}
+            </h1>
+
+            <p className="text-xl text-muted-foreground leading-relaxed text-pretty mb-8">
+              {article.description}
+            </p>
+
+            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+              <span>By {article.author || "Ctrl + G"}</span>
+              <span>•</span>
+              <span>
+                {article.publishedAt
+                  ? format(new Date(article.publishedAt), "MMMM d, yyyy")
+                  : "Draft"}
+              </span>
+              <span>•</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleShare}
+                className="gap-2"
+              >
+                <Share2 className="w-4 h-4" /> Share
+              </Button>
+            </div>
+          </header>
+
+          {/* ARTICLE CONTENT */}
+          <div className="prose-custom prose-lg mx-auto">
+            <div
+              className="article-content"
+              dangerouslySetInnerHTML={{ __html: article.content }}
+            />
+          </div>
+        </article>
+
+        {/* SHARE & NAVIGATION FOOTER */}
+        <div className="mt-16 pt-8 border-t border-border flex justify-between items-center">
+          <Link href="/articles" className="text-sm font-semibold hover:underline">
+            ← More articles
+          </Link>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleShare}
+            className="gap-2"
+          >
+            <Share2 className="w-4 h-4" /> Share
+          </Button>
+        </div>
+
+        {/* RELATED ARTICLES - MOVED TO BOTTOM */}
+        {article && (
+          <div className="mt-16 pt-12 border-t">
+            <RelatedArticles
+              currentArticleId={article.id}
+              excludeSlug={article.slug}
+            />
+          </div>
+        )}
+
+        {/* NEWSLETTER SIGNUP */}
+        <div className="mt-16 p-8 bg-secondary/30 rounded-xl text-center">
+          <h4 className="font-semibold text-2xl mb-3">Stay Updated</h4>
+          <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
+            Get notified when new articles are published. No spam, just practical insights on growth and automation.
+          </p>
+          <Link href="/">
+            <Button variant="outline" size="lg">
+              Subscribe to Newsletter
+            </Button>
+          </Link>
+        </div>
+      </div>
     </Layout>
   );
 }
