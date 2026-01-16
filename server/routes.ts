@@ -97,6 +97,23 @@ export async function registerRoutes(_httpServer: any, app: Express) {
     }
   });
 
+  // GET RELATED ARTICLES
+  app.get("/api/articles/:id/related", async (req, res) => {
+    try {
+      const articleId = parseInt(req.params.id, 10);
+
+      if (isNaN(articleId)) {
+        return res.status(400).json({ message: "Invalid article ID" });
+      }
+
+      const relatedArticles = await storage.getRelatedArticles(articleId, 3);
+      res.json(relatedArticles);
+    } catch (error) {
+      console.error("Error fetching related articles:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // CREATE SUBSCRIBER
 app.post(api.subscribers.create.path, async (req, res) => {
   try {

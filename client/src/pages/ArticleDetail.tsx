@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { RelatedArticles } from "@/components/RelatedArticles";
 
 export default function ArticleDetail() {
   const { slug } = useParams();
@@ -41,7 +42,9 @@ export default function ArticleDetail() {
       <Layout>
         <div className="py-20 text-center">
           <h1 className="text-3xl font-bold mb-4">Article not found</h1>
-          <p className="text-muted-foreground mb-8">The article you are looking for doesn't exist or has been moved.</p>
+          <p className="text-muted-foreground mb-8">
+            The article you are looking for doesn't exist or has been moved.
+          </p>
           <Link href="/articles">
             <Button variant="outline">Browse all articles</Button>
           </Link>
@@ -52,43 +55,85 @@ export default function ArticleDetail() {
 
   return (
     <Layout>
-      <article className="max-w-2xl mx-auto mt-8">
-        <header className="mb-12 text-center">
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <Link href="/articles" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
-              <ArrowLeft className="w-4 h-4" /> Back to articles
-            </Link>
+      <footer className="mt-8 max-w-6xl mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* MAIN ARTICLE */}
+          <div className="lg:col-span-2">
+            <article>
+              <header className="mb-12 text-center">
+                <div className="flex items-center justify-center gap-2 mb-8">
+                  <Link
+                    href="/articles"
+                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+                  >
+                    <ArrowLeft className="w-4 h-4" /> Back to articles
+                  </Link>
+                </div>
+
+                <time className="block text-sm font-medium text-muted-foreground mb-4 uppercase tracking-widest">
+                  {article.publishedAt
+                    ? format(new Date(article.publishedAt), "MMMM d, yyyy")
+                    : "Draft"}
+                </time>
+
+                <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-[1.15] text-pretty">
+                  {article.title}
+                </h1>
+
+                <p className="text-xl text-muted-foreground leading-relaxed text-pretty">
+                  {article.description}
+                </p>
+              </header>
+
+              <div className="prose-custom prose-lg mx-auto">
+                <div
+                  className="article-content"
+                  dangerouslySetInnerHTML={{ __html: article.content }}
+                />
+              </div>
+
+              <div className="mt-16 pt-8 border-t border-border flex justify-between items-center">
+                <Link href="/articles" className="text-sm font-semibold hover:underline">
+                  ← More articles
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleShare}
+                  className="gap-2"
+                >
+                  <Share2 className="w-4 h-4" /> Share
+                </Button>
+              </div>
+            </article>
           </div>
-          
-          <time className="block text-sm font-medium text-muted-foreground mb-4 uppercase tracking-widest">
-             {article.publishedAt ? format(new Date(article.publishedAt), "MMMM d, yyyy") : "Draft"}
-          </time>
-          
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-[1.15] text-pretty">
-            {article.title}
-          </h1>
-          
-          <p className="text-xl text-muted-foreground leading-relaxed text-pretty">
-            {article.description}
-          </p>
-        </header>
 
-        <div className="prose-custom prose-lg mx-auto">
-        <div 
-          className="article-content"
-          dangerouslySetInnerHTML={{ __html: article.content }} 
-        />
-      </div>
+          {/* SIDEBAR */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24">
+              {article && (
+                <RelatedArticles
+                  currentArticleId={article.id}
+                  excludeSlug={article.slug}
+                />
+              )}
 
-        <div className="mt-16 pt-8 border-t border-border flex justify-between items-center">
-          <Link href="/articles" className="text-sm font-semibold hover:underline">
-            ← More articles
-          </Link>
-          <Button variant="ghost" size="sm" onClick={handleShare} className="gap-2">
-            <Share2 className="w-4 h-4" /> Share
-          </Button>
+              {/* Newsletter signup */}
+              <div className="mt-12 p-6 bg-secondary/30 rounded-xl">
+                <h4 className="font-semibold text-lg mb-3">Stay Updated</h4>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Get notified when new articles are published.
+                </p>
+                <Link href="/">
+                  <Button variant="outline" className="w-full">
+                    Subscribe to Newsletter
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
-      </article>
+      </footer>
     </Layout>
   );
 }

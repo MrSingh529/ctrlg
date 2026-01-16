@@ -1,14 +1,17 @@
 import { getDb } from "./db.js";
 import { articles, subscribers, categories, articleCategories } from "@shared/schema";
-import { eq, desc, and, inArray } from "drizzle-orm";
+import { eq, ne, desc, and, inArray, sql } from "drizzle-orm";
 
 const db = getDb();
 
 export class DatabaseStorage {
   // ========== ARTICLES ==========
   async getArticles() {
-    const articlesList = await db.select().from(articles).orderBy(desc(articles.publishedAt));
-    
+    const articlesList = await db
+      .select()
+      .from(articles)
+      .orderBy(desc(articles.publishedAt));
+
     // Get categories for each article
     const articlesWithCategories = await Promise.all(
       articlesList.map(async (article) => {
@@ -17,29 +20,32 @@ export class DatabaseStorage {
           .from(articleCategories)
           .leftJoin(categories, eq(articleCategories.categoryId, categories.id))
           .where(eq(articleCategories.articleId, article.id));
-        
+
         return {
           ...article,
           categories: articleCats.map(ac => ac.categories).filter(Boolean),
         };
       })
     );
-    
+
     return articlesWithCategories;
   }
 
   async getArticleBySlug(slug: string) {
-    const [row] = await db.select().from(articles).where(eq(articles.slug, slug));
-    
+    const [row] = await db
+      .select()
+      .from(articles)
+      .where(eq(articles.slug, slug));
+
     if (!row) return null;
-    
+
     // Get categories for this article
     const articleCats = await db
       .select()
       .from(articleCategories)
       .leftJoin(categories, eq(articleCategories.categoryId, categories.id))
       .where(eq(articleCategories.articleId, row.id));
-    
+
     return {
       ...row,
       categories: articleCats.map(ac => ac.categories).filter(Boolean),
@@ -48,31 +54,85 @@ export class DatabaseStorage {
 
   async createArticle(data: any) {
     const { categoryIds, ...articleData } = data;
-    
+
     // Create article
-    const [article] = await db.insert(articles).values(articleData).returning();
-    
+    const [article] = await db
+      .insert(articles)
+      .values(articleData)
+      .returning();
+
     // Add categories if provided
     if (categoryIds && categoryIds.length > 0) {
       const articleCatValues = categoryIds.map((catId: number) => ({
         articleId: article.id,
         categoryId: catId,
       }));
-      
+
       await db.insert(articleCategories).values(articleCatValues);
     }
-    
+
     // Get categories for response
     const articleCats = await db
       .select()
       .from(articleCategories)
       .leftJoin(categories, eq(articleCategories.categoryId, categories.id))
       .where(eq(articleCategories.articleId, article.id));
-    
+
     return {
       ...article,
       categories: articleCats.map(ac => ac.categories).filter(Boolean),
     };
+  }
+
+  /**
+   * Get related articles based on shared categories
+   */
+  async getRelatedArticles(currentArticleId: number, limit: number = 3) {
+    // Get categories of the current article
+    const currentArticleCategories = await db
+      .select({ categoryId: articleCategories.categoryId })
+      .from(articleCategories)
+      .where(eq(articleCategories.articleId, currentArticleId));
+
+    // If no categories, return latest articles
+    if (currentArticleCategories.length === 0) {
+      return db
+        .select()
+        .from(articles)
+        .where(ne(articles.id, currentArticleId))
+        .orderBy(desc(articles.publishedAt))
+        .limit(limit);
+    }
+
+    const categoryIds = currentArticleCategories.map(c => c.categoryId);
+
+    // Find articles that share the same categories
+    const relatedArticles = await db
+      .selectDistinct({
+        article: articles,
+        sharedCategories: sql<number>`
+          COUNT(DISTINCT ${articleCategories.categoryId})
+        `.as("shared_categories"),
+      })
+      .from(articles)
+      .innerJoin(
+        articleCategories,
+        eq(articles.id, articleCategories.articleId)
+      )
+      .where(
+        and(
+          ne(articles.id, currentArticleId),
+          inArray(articleCategories.categoryId, categoryIds)
+        )
+      )
+      .groupBy(articles.id)
+      .orderBy(
+        desc(sql`shared_categories`),
+        desc(articles.publishedAt)
+      )
+      .limit(limit);
+
+    return relatedArticles.map(ra => ra.article);
   }
 
   // ========== CATEGORIES ==========
@@ -81,21 +141,27 @@ export class DatabaseStorage {
   }
 
   async getCategoryBySlug(slug: string) {
-    const [row] = await db.select().from(categories).where(eq(categories.slug, slug));
+    const [row] = await db
+      .select()
+      .from(categories)
+      .where(eq(categories.slug, slug));
     return row;
   }
 
   async getArticlesByCategory(categorySlug: string) {
     const category = await this.getCategoryBySlug(categorySlug);
     if (!category) return [];
-    
+
     const articlesList = await db
       .select()
       .from(articles)
-      .leftJoin(articleCategories, eq(articles.id, articleCategories.articleId))
+      .leftJoin(
+        articleCategories,
+        eq(articles.id, articleCategories.articleId)
+      )
       .where(eq(articleCategories.categoryId, category.id))
       .orderBy(desc(articles.publishedAt));
-    
+
     return articlesList.map(a => a.articles);
   }
 
@@ -105,12 +171,18 @@ export class DatabaseStorage {
   }
 
   async createSubscriber(data: any) {
-    const [row] = await db.insert(subscribers).values(data).returning();
+    const [row] = await db
+      .insert(subscribers)
+      .values(data)
+      .returning();
     return row;
   }
 
   async getSubscriberByEmail(email: string) {
-    const [row] = await db.select().from(subscribers).where(eq(subscribers.email, email));
+    const [row] = await db
+      .select()
+      .from(subscribers)
+      .where(eq(subscribers.email, email));
     return row;
   }
 }
