@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Category } from "@shared/schema";
 import { Tag } from "lucide-react";
+import { apiUrl } from "@/lib/api";
 
 export function CategoriesSidebar() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -14,7 +15,7 @@ export function CategoriesSidebar() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("/api/categories");
+      const response = await fetch(apiUrl("/api/categories"));
       const data = await response.json();
       setCategories(data);
     } catch (error) {

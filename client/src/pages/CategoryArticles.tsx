@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import { Article, Category } from "@shared/schema";
 import { motion } from "framer-motion";
+import { apiUrl } from "@/lib/api";
 
 export default function CategoryArticles() {
   const { slug } = useParams();
@@ -20,14 +21,14 @@ export default function CategoryArticles() {
     setIsLoading(true);
     try {
       // Fetch category info
-      const categoryRes = await fetch(`/api/categories/${slug}`);
+      const categoryRes = await fetch(apiUrl(`/api/categories/${slug}`));
       if (categoryRes.ok) {
         const categoryData = await categoryRes.json();
         setCategory(categoryData);
       }
 
       // Fetch articles for this category
-      const articlesRes = await fetch(`/api/categories/${slug}/articles`);
+      const articlesRes = await fetch(apiUrl(`/api/categories/${slug}/articles`));
       if (articlesRes.ok) {
         const articlesData = await articlesRes.json();
         setArticles(articlesData);
