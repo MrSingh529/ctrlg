@@ -14,7 +14,9 @@ export default function CategoryArticles() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchCategoryData();
+    if (slug) {
+      fetchCategoryData();
+    }
   }, [slug]);
 
   const fetchCategoryData = async () => {

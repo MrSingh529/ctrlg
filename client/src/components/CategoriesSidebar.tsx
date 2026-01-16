@@ -63,10 +63,11 @@ export function CategoriesSidebar() {
                     : "hover:bg-secondary text-muted-foreground"
                 }`}
               >
-                {category.name}
-                <span className="text-xs opacity-60 ml-2">
-                  ({/* You can add article count here later */})
-                </span>
+                <div className="flex items-center justify-between">
+                  <span>{category.name}</span>
+                  {/* Remove the empty parentheses for now */}
+                  {/* <span className="text-xs opacity-60">()</span> */}
+                </div>
               </button>
             </Link>
           ))}
