@@ -74,13 +74,20 @@ export function CategoriesSidebar() {
         </div>
       </div>
       
-      {/* Popular Tags/Info */}
+        {/* ABOUT Section */}
       <div className="pt-6 border-t">
         <h4 className="font-semibold text-sm mb-3 text-muted-foreground">ABOUT</h4>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Practical writing on technology, Excel, AI, and automation — for people who want smarter work, not more work.
-        </p>
+        <div className="space-y-3">
+          <div className="space-y-1">
+            <h5 className="font-bold text-base">Ctrl + G</h5>
+            <p className="text-xs text-muted-foreground">
+              A blog by Harpinder Singh for smarter work, not more work.
+            </p>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed pt-2 border-t">
+            Practical writing on technology, Excel, AI, and automation.
+          </p>
+        </div>
       </div>
-    </div>
   );
 }
