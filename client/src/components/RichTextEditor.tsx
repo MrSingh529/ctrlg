@@ -1,23 +1,23 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import Table from "@tiptap/extension-table";
-import TableRow from "@tiptap/extension-table-row";
-import TableHeader from "@tiptap/extension-table-header";
-import TableCell from "@tiptap/extension-table-cell";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableCell } from "@tiptap/extension-table-cell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Bold,
-  Italic,
-  List,
-  ListOrdered,
-  Heading2,
+import { 
+  Bold, 
+  Italic, 
+  List, 
+  ListOrdered, 
+  Heading2, 
   Heading3,
   Quote,
   Undo,
   Redo,
-  Table as TableIcon,
+  Table as TableIcon
 } from "lucide-react";
 
 interface RichTextEditorProps {
