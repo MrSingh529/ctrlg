@@ -127,7 +127,7 @@ export default function ArticleDetail() {
           </Button>
         </div>
 
-        {/* RELATED ARTICLES - MOVED TO BOTTOM */}
+        {/* RELATED ARTICLES*/}
         {article && (
           <div className="mt-16 pt-12 border-t">
             <RelatedArticles
