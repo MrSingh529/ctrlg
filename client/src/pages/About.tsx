@@ -176,14 +176,6 @@ export default function About() {
                       <strong>Ctrl + G</strong> is where these experiences are distilled into clear writing for others facing the same problems.
                     </p>
 
-                    <div className="mt-8 p-6 bg-secondary/30 rounded-xl border-l-4 border-primary">
-                      <p className="text-lg font-medium italic text-foreground">
-                        This is not theoretical productivity.
-                        <br />
-                        It's practical thinking, tested inside real work.
-                      </p>
-                    </div>
-
                     {/* Contact CTA */}
                     <div className="mt-8 p-6 bg-primary/5 rounded-xl">
                       <h4 className="font-bold mb-2">Want to connect?</h4>
