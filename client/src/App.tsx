@@ -13,7 +13,6 @@ import Admin from "@/pages/Admin";
 import CategoryArticles from "@/pages/CategoryArticles";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights";
 import { initGA } from "./lib/analytics";
 import { useEffect } from "react";
 import { GoogleAnalyticsTracker } from './components/GoogleAnalyticsTracker';
