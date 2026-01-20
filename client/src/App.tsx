@@ -50,7 +50,6 @@ function App() {
           <Toaster />
           <GoogleAnalyticsTracker />
           <Analytics />
-          <SpeedInsights />
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>
