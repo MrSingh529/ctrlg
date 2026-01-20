@@ -13,6 +13,10 @@ import Admin from "@/pages/Admin";
 import CategoryArticles from "@/pages/CategoryArticles";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights";
+import { initGA } from "./lib/analytics";
+import { useEffect } from "react";
+import { GoogleAnalyticsTracker } from './components/GoogleAnalyticsTracker';
 
 function Router() {
   return (
@@ -30,6 +34,10 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    initGA();
+  }, []);
+
   return (
     <ThemeProvider
       attribute="class"
@@ -39,9 +47,11 @@ function App() {
     >
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Toaster />
           <Router />
+          <Toaster />
+          <GoogleAnalyticsTracker />
           <Analytics />
+          <SpeedInsights />
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>
