@@ -103,7 +103,7 @@ export default function About() {
                       <p className="text-sm font-medium mb-3 text-center">Connect</p>
                       <div className="flex justify-center gap-4">
                         <a
-                          href="https://linkedin.com/in/harpinder-singh"
+                          href="https://www.linkedin.com/in/harpindersingh99bab81a1/"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
@@ -113,7 +113,7 @@ export default function About() {
                         </a>
                         <span className="text-muted-foreground">•</span>
                         <a
-                          href="mailto:harpinder@example.com"
+                          href="mailto:harpindersingh529@gmail.com"
                           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
                         >
                           <Mail className="w-4 h-4" />
@@ -190,19 +190,19 @@ export default function About() {
                       <p className="text-sm text-muted-foreground mb-3">
                         I'm always open to discussing automation, productivity, or potential collaborations.
                       </p>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-3">
                         <a
                           href="https://www.linkedin.com/in/harpindersingh99bab81a1/"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
                         >
                           <Linkedin className="w-4 h-4" />
                           Connect on LinkedIn
                         </a>
                         <a
                           href="mailto:harpindersingh529@gmail.com"
-                          className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm font-medium hover:bg-secondary transition-colors"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg text-sm font-medium hover:bg-secondary/80 transition-colors"
                         >
                           <Mail className="w-4 h-4" />
                           Send an Email
