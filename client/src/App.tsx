@@ -12,6 +12,7 @@ import NotFound from "@/pages/not-found";
 import Admin from "@/pages/Admin";
 import CategoryArticles from "@/pages/CategoryArticles";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 function Router() {
   return (
@@ -40,6 +41,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <Analytics />
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>
