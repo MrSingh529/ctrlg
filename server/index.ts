@@ -7,8 +7,9 @@ const app = express();
 // CORS middleware - FIXED
 app.use((req, res, next) => {
   const allowedOrigins = [
-    "https://ctrlgtech.vercel.app",
-    "http://localhost:3000"
+    "https://ctrlg.in",
+    "http://localhost:3000",
+    "https://ctrlgtech.vercel.app"
   ];
   
   const origin = req.headers.origin;
