@@ -4,34 +4,30 @@ import { registerRoutes } from "./routes";
 
 const app = express();
 
-// CORS middleware - FIXED
+// CORS middleware
 app.use((req, res, next) => {
   const allowedOrigins = [
+    "https://www.ctrlg.in",
     "https://ctrlg.in",
-    "http://localhost:3000",
-    "https://ctrlgtech.vercel.app"
+    "https://ctrlgtech.vercel.app",
+    "http://localhost:3000"
   ];
-  
-  const origin = req.headers.origin;
-  
-  // Set CORS headers for ALL responses
+
+  const origin = req.headers.origin as string | undefined;
+
   if (origin && allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
-  
+
+  res.setHeader("Vary", "Origin");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.setHeader("Access-Control-Allow-Credentials", "true");
-  
-  // Handle preflight
+
   if (req.method === "OPTIONS") {
-    // Send proper headers for OPTIONS
-    return res.status(204).header({
-      "Content-Length": "0",
-      "Access-Control-Max-Age": "86400"
-    }).end();
+    return res.sendStatus(204);
   }
-  
+
   next();
 });
 
