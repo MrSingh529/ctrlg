@@ -73,7 +73,7 @@ export async function sendArticleEmailMailjet(
         Messages: [
           {
             From: {
-              Email: "harpindersingh529@gmail.com",
+              Email: "harpinder@ctrlg.in",
               Name: "Ctrl + G"
             },
             To: [
