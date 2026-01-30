@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { useArticles } from "@/hooks/use-articles";
 import { Layout } from "@/components/Layout";
 import { ArticleCard } from "@/components/ArticleCard";
@@ -11,7 +12,14 @@ export default function Home() {
 
   return (
     <Layout>
-      {/* Hero Section */}
+      <Helmet>
+        <title>Excel AI Automation — Ask Questions, Not Formulas | Ctrl+G</title>
+        <meta
+          name="description"
+          content="Learn how to use Excel with AI to analyze data, automate reports, and work without complex formulas."
+        />
+      </Helmet>
+
       <section className="mb-24 mt-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -22,11 +30,15 @@ export default function Home() {
           <div className="inline-block px-3 py-1 rounded-full bg-secondary text-xs font-medium text-secondary-foreground mb-4">
             Updated weekly
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tighter text-foreground leading-[1.1]">
-            From Ctrl+V <br/> to <span className="text-muted-foreground">Growth.</span>
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tighter leading-[1.1]">
+            Excel + AI Automation <br />
+            <span className="text-muted-foreground">
+              Ask questions, not formulas.
+            </span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed font-light">
-            Practical writing on technology, Excel, AI, and automation — for people who want smarter work, not more work.
+            Practical writing on technology, Excel, AI, and automation — for
+            people who want smarter work, not more work.
           </p>
         </motion.div>
       </section>
@@ -35,7 +47,10 @@ export default function Home() {
       <section>
         <div className="flex items-end justify-between mb-12 border-b border-border pb-4">
           <h2 className="text-2xl font-bold tracking-tight">Latest Writing</h2>
-          <Link href="/articles" className="text-sm font-medium text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors">
+          <Link
+            href="/articles"
+            className="text-sm font-medium text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors"
+          >
             View all <ArrowUpRight className="w-4 h-4" />
           </Link>
         </div>
@@ -51,11 +66,17 @@ export default function Home() {
             ))
           ) : articles && articles.length > 0 ? (
             articles.slice(0, 5).map((article, index) => (
-              <ArticleCard key={article.id} article={article} index={index} />
+              <ArticleCard
+                key={article.id}
+                article={article}
+                index={index}
+              />
             ))
           ) : (
             <div className="py-12 text-center bg-secondary/30 rounded-xl">
-              <p className="text-muted-foreground">No articles published yet.</p>
+              <p className="text-muted-foreground">
+                No articles published yet.
+              </p>
             </div>
           )}
         </div>

@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { useArticle } from "@/hooks/use-articles";
 import { Layout } from "@/components/Layout";
 import { useParams, Link } from "wouter";
@@ -66,6 +67,19 @@ export default function ArticleDetail() {
           </Link>
         </div>
 
+        {/* SEO */}
+        <Helmet>
+          <title>{article.title} | Ctrl+G</title>
+          <meta
+            name="description"
+            content={article.description || article.title}
+          />
+          <link
+            rel="canonical"
+            href={`https://ctrlg.in/articles/${article.slug}`}
+          />
+        </Helmet>
+
         {/* ARTICLE HEADER */}
         <article>
           <header className="mb-12 text-center">
@@ -127,7 +141,7 @@ export default function ArticleDetail() {
           </Button>
         </div>
 
-        {/* RELATED ARTICLES*/}
+        {/* RELATED ARTICLES */}
         {article && (
           <div className="mt-16 pt-12 border-t">
             <RelatedArticles
@@ -141,7 +155,8 @@ export default function ArticleDetail() {
         <div className="mt-16 p-8 bg-secondary/30 rounded-xl text-center">
           <h4 className="font-semibold text-2xl mb-3">Stay Updated</h4>
           <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
-            Get notified when new articles are published. No spam, just practical insights on growth and automation.
+            Get notified when new articles are published. No spam, just practical
+            insights on growth and automation.
           </p>
           <Link href="/">
             <Button variant="outline" size="lg">
