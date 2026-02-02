@@ -69,7 +69,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           
           <div className="flex flex-col md:items-end justify-between gap-6">
             <div className="text-sm text-muted-foreground space-y-1 md:text-right">
-              <p>© 2026 Ctrl + G</p>
+              <p>© 2026 Ctrl + G — An independent writing project by Harpinder Singh</p>
               <p>From Ctrl+V to Growth</p>
             </div>
             <div className="flex gap-6 text-sm font-medium">

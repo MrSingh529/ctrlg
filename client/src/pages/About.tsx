@@ -1,6 +1,7 @@
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Check, User, Briefcase, Zap, Mail, Linkedin } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 export default function About() {
   const points = [
@@ -11,6 +12,14 @@ export default function About() {
 
   return (
     <Layout>
+      <Helmet>
+        <title>About Ctrl + G — Excel, Automation & Practical AI</title>
+        <meta
+          name="description"
+          content="About Ctrl + G, an independent writing project by Harpinder Singh focused on Excel automation, applied AI, and practical work systems."
+        />
+      </Helmet>
+
       <div className="max-w-4xl mx-auto mt-8 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -27,6 +36,12 @@ export default function About() {
               <p className="text-xl text-foreground font-medium leading-relaxed mb-8">
                 Ctrl + G is a personal space about working smarter — not louder.
                 It's built for people who actually do the work, not just talk about tools.
+              </p>
+
+              <p className="text-muted-foreground mb-6">
+                <strong>Ctrl + G</strong> is an independent personal blog and writing project
+                by <strong>Harpinder Singh</strong>, focused on practical work systems,
+                Excel automation, and applied AI.
               </p>
 
               <p className="text-muted-foreground">
@@ -122,11 +137,10 @@ export default function About() {
                       </div>
                     </div>
 
-                    {/* Quick Info */}
                     <div className="pt-4 border-t">
                       <p className="text-sm text-muted-foreground text-center">
-                        <strong>Ctrl + G</strong> is written by Harpinder Singh.
-                        Based in India. Building practical solutions.
+                        <strong>Ctrl + G</strong> is independently published and maintained by
+                        <strong> Harpinder Singh</strong>. Based in India.
                       </p>
                     </div>
                   </div>
