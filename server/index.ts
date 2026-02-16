@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import { registerRoutes } from "./routes";
+import axios from "axios";
 
 const app = express();
 
@@ -39,4 +40,30 @@ registerRoutes(null as any, app);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`API running on port ${PORT}`);
+  
+  // This prevents Render from sleeping after 15 minutes of inactivity  
+  setTimeout(() => {
+    const SELF_URL = process.env.RENDER_EXTERNAL_URL || 'https://ctrlg-backend.onrender.com';
+    const PING_INTERVAL = 12 * 60 * 1000; // 12 minutes
+    
+    function pingSelf() {
+      const urlToPing = `${SELF_URL}/api/articles`;
+      console.log(`[Keep-Alive] Pinging: ${urlToPing}`);
+      
+      axios.get(urlToPing)
+        .then(response => {
+          console.log(`[Keep-Alive] Ping successful. Status: ${response.status}`);
+        })
+        .catch(error => {
+          console.log(`[Keep-Alive] Ping triggered server wake-up. Message: ${error.message}`);
+        });
+    }
+    
+    // Start the interval
+    setInterval(pingSelf, PING_INTERVAL);
+    console.log(`[Keep-Alive] Timer set to ping every 12 minutes`);
+    
+    // Ping once immediately to ensure it's awake
+    pingSelf();
+  }, 5000); // Wait 5 seconds before starting
 });
